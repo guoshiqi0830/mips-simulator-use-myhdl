@@ -22,3 +22,4 @@ def instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate):
         mem[13].next = 0x00000000
         mem[14].next = 0x00000000
         mem[15].next = 0x00000000
+    return logic
