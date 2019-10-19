@@ -1,0 +1,35 @@
+from myhdl import *
+
+@block
+def Clock(clk, period=1):
+
+    halfPeriod = delay(period)
+
+    @always(halfPeriod)
+    def drive_clock():
+        clk.next = not clk
+
+    return drive_clock
+
+@block
+def test():
+    clk = Signal(0)
+    clock = Clock(clk)
+
+    @instance
+    def Stimulus():
+        while True:
+            yield delay(1)
+            print(clk)
+    
+    return instances()
+
+
+def main():
+    t = test()
+    t.run_sim(10)
+
+
+if __name__ == '__main__':
+    main()
+
