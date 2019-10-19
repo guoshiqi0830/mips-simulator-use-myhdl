@@ -13,7 +13,7 @@ def registerFile(clk, RegWre, RegOut, rs, rt, rd, ALUM2Reg,
     @always(clk.posedge, RegOut, RegWre, ALUM2Reg, writeReg, writeData)
     def logic():
         if RegWre and writeReg:
-            # TODO
+            register[writeReg] = writeData
     return logic
 
 @block
