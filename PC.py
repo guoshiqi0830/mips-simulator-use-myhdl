@@ -5,6 +5,8 @@ from Clock import Clock
 def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
     @always(clk.posedge, Reset.negedge )
     def logic():
+        print('Enter PC')
+        print(Address)
         if Reset == 0:
             Address.next = 0
         elif PCWre:
@@ -12,7 +14,7 @@ def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
                 Address.next = Address + 4 + immediate * 4
             else:
                 Address.next = Address + 4
-
+        print('Exit PC\n')
     return logic
 
 @block

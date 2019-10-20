@@ -6,6 +6,10 @@ def ALU(ALUOp, A, B, result, zero):
 
     @always_comb
     def logic():
+        print('Enter ALU')
+        print('ALUOp:' + str(ALUOp))
+        print('A:' + str(A))
+        print('B:' + str(B))
         if ALUOp == intbv('000'):
             result.next = A + B
         elif ALUOp == intbv('001'):
@@ -22,6 +26,8 @@ def ALU(ALUOp, A, B, result, zero):
             result.next = A ^ B
         elif ALUOp == intbv('111'):
             result.next = A ^ ~B
+        
+        print('Exit ALU\n')
 
     @always_comb
     def zero_detector():
