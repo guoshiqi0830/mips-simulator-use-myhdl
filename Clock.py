@@ -20,14 +20,14 @@ def test():
     def Stimulus():
         while True:
             yield delay(1)
-            print(clk)
+            print(int(clk))
     
     return instances()
 
 
 def main():
     t = test()
-    t.run_sim(10)
+    t.run_sim(4)
 
 
 if __name__ == '__main__':

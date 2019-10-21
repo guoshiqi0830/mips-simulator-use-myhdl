@@ -27,9 +27,11 @@ def singleCyleCpu():  #clk, Reset
     Reset, clk, zero, PCWre, PCSrc, ALUSrcB, ALUM2Reg,\
          RegWre, InsMemRW, DataMemRW, ExtSel, RegOut = signal_1bit
 
-    # 简化的ALU，没有引入立即数扩展功能
-    alu = ALU(ALUOp, Out1, Out2, Result, zero)
+    clk = Signal(intbv(0)[1:])
+    # zero = Signal(intbv(1)[1:])
+
     clock = Clock(clk)
+    alu = ALU(Out1, Out2, ExtOut, ALUSrcB, ALUOp, zero, Result)
     pc = PC(clk, Reset, PCWre, PCSrc, immediate, curPC)
     control = ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre,
                           InsMemRW, DataMemRW, ExtSel, PCSrc, RegOut, ALUOp)
@@ -37,7 +39,6 @@ def singleCyleCpu():  #clk, Reset
     ins = instructionMemory(curPC, InsMemRW, opCode, rs, rt, rd, immediate)
     registerfile = registerFile(clk, RegWre, RegOut, rs, rt, rd, ALUM2Reg,
                                 Result, DMOut, Out1, Out2)
-    # 并没有使用到立即数扩展这个模块
     ext = SignZeroExtend(immediate, ExtSel, ExtOut)
 
     @instance
@@ -45,15 +46,17 @@ def singleCyleCpu():  #clk, Reset
         Reset.next = 1
         while True:
             yield delay(1)
-            print(clk, '{0:06b}'.format(int(opCode)), rs, rt, rd, Out1, Out2,
-                  curPC, Result, PCWre, InsMemRW)
-
+            print('-----------------------------------------------------------')
+            print('clk:' + str(clk), 'opcode:' + '{0:06b}'.format(int(opCode)),
+                  'Out1:' + str(Out1), 'Out2:' + str(Out2),
+                  'curPc:' + str(curPC), 'Result:' + str(Result))
+            print('-----------------------------------------------------------\n')
     return instances()
 
 
 def main():
     t = singleCyleCpu()
-    t.run_sim(5)
+    t.run_sim(4)
 
 
 if __name__ == '__main__':

@@ -4,39 +4,42 @@ from myhdl import *
 @block
 def instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate):
     mem = [Signal(intbv(0)[32:]) for i in range(16)]
-    mem[0] = intbv(0x00000000)[32:]
-    mem[1] = intbv(0b10011100001000010000000000000000)[32:]
-    mem[2] = intbv(0b10011100010000100000000000000001)[32:]
-    # mem[1] = intbv(0b10011100001)[32:]
-    # mem[0] = intbv(0x00000000)[32:]
-    # mem[1] = intbv(0x04010000)[32:]
-    # mem[2] = intbv(0x4002000C)[32:]
-    # mem[3] = intbv(0x00221800)[32:]
-    # mem[4] = intbv(0x08412000)[32:]
-    # mem[5] = intbv(0x44222800)[32:]
-    # mem[6] = intbv(0x48223000)[32:]
-    # mem[7] = intbv(0xC0220004)[32:]
-    # mem[8] = intbv(0x80203800)[32:]
-    # mem[9] = intbv(0x98E10001)[32:]
-    # mem[10] = intbv(0x9C220000)[32:]
-    # mem[11] = intbv(0xC047FFFB)[32:]
-    # mem[12] = intbv(0xFC000000)[32:]
-    # mem[13] = intbv(0x00000000)[32:]
-    # mem[14] = intbv(0x00000000)[32:]
-    # mem[15] = intbv(0x00000000)[32:]
+    mem[0] = intbv(0)[32:]
+
+    # lw $2 0($1)
+    # get datamem[2] to reg[2]
+    mem[1] = intbv('100111' + '00000' + '00010' + '0000000000000011')[32:]
+
+    # addi $1 $0 3
+    # reg[1] = 3
+    mem[3] = intbv('000001' + '00000' + '00001' + '0000000000000011')[32:]
+
+    # lw $3 0($1)
+    # get datamem[3] to reg[3]
+    mem[4] = intbv('100111' + '00001' + '00011' + '0000000000000000')[32:]
+
+    # add $4 $2 $3
+    mem[5] = intbv('000000' + '00010' + '00011' + '0010000000000000')[32:]
 
     @always_comb
     def logic():
-        print('Enter insMem')
-        print('pc：' + str(pc))
+        print('-> Enter insMem')
         if InsMemRW == 0:
-            code = mem[pc // 4]
-            op.next = code[32:26]
-            rs.next = code[26:21]
-            rt.next = code[21:16]
-            rd.next = code[16:11]
-            immediate.next = code[16:]
-        print('Exit insMem\n')
+            ins = mem[pc // 4]
+            op.next = ins[32:26]
+            rs.next = ins[26:21]
+            rt.next = ins[21:16]
+            rd.next = ins[16:11]
+            immediate.next = ins[16:]
+            print('pc:' + str(pc),
+                  'ins:' + '{0:032b}'.format(int(str(ins[32:]), 16)))
+            print('op:' + '{0:06b}'.format(int(str(ins[32:26]), 16)),
+                  'rs:' + '{0:05b}'.format(int(str(ins[26:21]), 16)),
+                  'rt:' + '{0:05b}'.format(int(str(ins[21:16]), 16)),
+                  'rd:' + '{0:05b}'.format(int(str(ins[16:11]), 16)),
+                  'immediate:' + '{0:016b}'.format(int(str(ins[16:]), 16)))
+        print('<- Exit insMem\n')
+
     return logic
 
 

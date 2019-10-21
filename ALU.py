@@ -2,14 +2,17 @@ from myhdl import *
 
 
 @block
-def ALU(ALUOp, A, B, result, zero):
-
+def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result):
     @always_comb
     def logic():
-        print('Enter ALU')
-        print('ALUOp:' + str(ALUOp))
-        print('A:' + str(A))
-        print('B:' + str(B))
+        print('->Enter ALU')
+        A = ReadData1
+        if ALUSrcB == 0:
+            B = ReadData2
+        else:
+            B = inExt
+        print('inExt:' + str(inExt), 'ALUSrcB:' + str(ALUSrcB),
+              'ALUOp:' + str(ALUOp), 'A:' + str(A), 'B:' + str(B))
         if ALUOp == intbv('000'):
             result.next = A + B
         elif ALUOp == intbv('001'):
@@ -26,8 +29,7 @@ def ALU(ALUOp, A, B, result, zero):
             result.next = A ^ B
         elif ALUOp == intbv('111'):
             result.next = A ^ ~B
-        
-        print('Exit ALU\n')
+        print('<-Exit ALU\n')
 
     @always_comb
     def zero_detector():
@@ -35,7 +37,6 @@ def ALU(ALUOp, A, B, result, zero):
             zero.next = 1
         else:
             zero.next = 0
-
 
     return logic, zero_detector
 
@@ -52,11 +53,11 @@ def test():
 
     @instance
     def stimulus():
-        A.next = int('111',2)
-        B.next = int('010',2)
-        for aluop in ('000','001','010','011','100','101','110','111'):
+        A.next = int('111', 2)
+        B.next = int('010', 2)
+        for aluop in ('000', '001', '010', '011', '100', '101', '110', '111'):
             ALUOp.next = intbv(aluop)
-            
+
             yield delay(10)
             print(aluop)
             print(A, B, result, zero)

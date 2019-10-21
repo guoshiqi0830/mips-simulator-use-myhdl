@@ -4,9 +4,9 @@ from myhdl import *
 @block
 def ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW,
                 DataMemRW, ExtSel, PCSrc, RegOut, ALUOp):
-    @always_comb
+    @always(opCode,zero)
     def logic():
-        print('Enter CU')
+        print('-> Enter CU')
         print('opcode:' + '{0:06b}'.format(int(opCode)))
         PCWre.next = 0 if opCode == intbv('111111')[6:] else 1
         ALUSrcB.next = 1 if opCode in (intbv('000001')[6:],
@@ -30,7 +30,7 @@ def ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW,
         aluop[0] = 1 if opCode in (intbv('000010')[6:], intbv('010000')[6:],
                                    intbv('010010')[6:]) else 0
         ALUOp.next = aluop
-        print('Exit CU\n')
+        print('<- Exit CU\n')
     return logic
 
 

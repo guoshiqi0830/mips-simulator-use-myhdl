@@ -1,12 +1,14 @@
 from myhdl import *
 from Clock import Clock
 
+
 @block
 def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
-    @always(clk.posedge, Reset.negedge )
+    @always(clk.posedge, Reset.negedge)
     def logic():
-        print('Enter PC')
-        print(Address)
+        print('-> Enter PC')
+        print('Address:' + str(Address), 'PCWre:' + str(PCWre),
+              'PCSrc:' + str(PCSrc))
         if Reset == 0:
             Address.next = 0
         elif PCWre:
@@ -14,8 +16,10 @@ def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
                 Address.next = Address + 4 + immediate * 4
             else:
                 Address.next = Address + 4
-        print('Exit PC\n')
+        print('<- Exit PC\n')
+
     return logic
+
 
 @block
 def test():
@@ -31,8 +35,8 @@ def test():
 
     @instance
     def stimulus():
-        Address.next = int('1000',2)
-        immediate.next = int('0100',2)
+        Address.next = int('1000', 2)
+        immediate.next = int('0100', 2)
         while True:
             yield delay(1)
             print(clk, Reset, PCWre, PCSrc, immediate, int(Address))
