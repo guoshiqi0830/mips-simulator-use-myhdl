@@ -2,28 +2,24 @@ from myhdl import *
 
 
 @block
-def instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate):
+def instructionMemory(instructions,
+                      pc,
+                      InsMemRW,
+                      op,
+                      rs,
+                      rt,
+                      rd,
+                      immediate,
+                      DEBUG=False):
     mem = [Signal(intbv(0)[32:]) for i in range(16)]
-    mem[0] = intbv(0)[32:]
-
-    # lw $2 0($1)
-    # get datamem[2] to reg[2]
-    mem[1] = intbv('100111' + '00000' + '00010' + '0000000000000011')[32:]
-
-    # addi $1 $0 3
-    # reg[1] = 3
-    mem[3] = intbv('000001' + '00000' + '00001' + '0000000000000011')[32:]
-
-    # lw $3 0($1)
-    # get datamem[3] to reg[3]
-    mem[4] = intbv('100111' + '00001' + '00011' + '0000000000000000')[32:]
-
-    # add $4 $2 $3
-    mem[5] = intbv('000000' + '00010' + '00011' + '0010000000000000')[32:]
+    for i in range(len(instructions)):
+        mem[i] = intbv(instructions[i])[32:]
 
     @always_comb
     def logic():
-        print('-> Enter insMem')
+        if DEBUG:
+            print('-> Enter insMem')
+
         if InsMemRW == 0:
             ins = mem[pc // 4]
             op.next = ins[32:26]
@@ -31,6 +27,8 @@ def instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate):
             rt.next = ins[21:16]
             rd.next = ins[16:11]
             immediate.next = ins[16:]
+
+        if DEBUG:
             print('pc:' + str(pc),
                   'ins:' + '{0:032b}'.format(int(str(ins[32:]), 16)))
             print('op:' + '{0:06b}'.format(int(str(ins[32:26]), 16)),
@@ -38,7 +36,7 @@ def instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate):
                   'rt:' + '{0:05b}'.format(int(str(ins[21:16]), 16)),
                   'rd:' + '{0:05b}'.format(int(str(ins[16:11]), 16)),
                   'immediate:' + '{0:016b}'.format(int(str(ins[16:]), 16)))
-        print('<- Exit insMem\n')
+            print('<- Exit insMem\n')
 
     return logic
 

@@ -27,7 +27,7 @@ def test():
 
 def main():
     t = test()
-    t.run_sim(4)
+    t.run_sim(2)
 
 
 if __name__ == '__main__':

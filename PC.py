@@ -3,12 +3,13 @@ from Clock import Clock
 
 
 @block
-def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
+def PC(clk, Reset, PCWre, PCSrc, immediate, Address, DEBUG=False):
     @always(clk.posedge, Reset.negedge)
     def logic():
-        print('-> Enter PC')
-        print('Address:' + str(Address), 'PCWre:' + str(PCWre),
-              'PCSrc:' + str(PCSrc))
+        if DEBUG:
+            print('-> Enter PC')
+            print('Address:' + str(Address), 'PCWre:' + str(PCWre),
+                  'PCSrc:' + str(PCSrc))
         if Reset == 0:
             Address.next = 0
         elif PCWre:
@@ -16,7 +17,9 @@ def PC(clk, Reset, PCWre, PCSrc, immediate, Address):
                 Address.next = Address + 4 + immediate * 4
             else:
                 Address.next = Address + 4
-        print('<- Exit PC\n')
+
+        if DEBUG:
+            print('<- Exit PC\n')
 
     return logic
 

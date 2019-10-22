@@ -8,9 +8,29 @@ from PC import PC
 from registerFile import registerFile
 from SignZeroExtend import SignZeroExtend
 
+import io
+import re
+
+
+def load_program(program):
+    '''
+    从program文件夹中读取指令
+    参数为文件名
+    '''
+    ins = []
+    cnt = 0
+    with io.open('./program/' + program + '.txt') as f:
+        for line in f:
+            match = re.match('([0,1]{6}  [0,1]{5}  [0,1]{5}  [0,1]{16}).*',
+                             line)
+            if match:
+                ins.append(match.group(1).replace(' ', ''))
+                cnt += 1
+    return ins, cnt
+
 
 @block
-def singleCyleCpu():  #clk, Reset
+def singleCyleCpu(instructions):  #clk, Reset
     opCode = Signal(intbv(0)[6:])
     signal_32bit = [Signal(intbv(0)[32:]) for i in range(4)]
     Out1, Out2, curPC, Result = signal_32bit
@@ -23,20 +43,21 @@ def singleCyleCpu():  #clk, Reset
     signal_5bit = [Signal(intbv(0)[5:]) for i in range(3)]
     rs, rt, rd = signal_5bit
 
-    signal_1bit = [Signal(intbv(0)[1:]) for i in range(12)]
+    signal_1bit = [Signal(intbv(0)[1:]) for i in range(13)]
     Reset, clk, zero, PCWre, PCSrc, ALUSrcB, ALUM2Reg,\
-         RegWre, InsMemRW, DataMemRW, ExtSel, RegOut = signal_1bit
+         RegWre, InsMemRW, DataMemR, DataMemW, ExtSel, RegOut = signal_1bit
 
-    clk = Signal(intbv(0)[1:])
-    # zero = Signal(intbv(1)[1:])
+    clk = Signal(intbv(1)[1:])
 
     clock = Clock(clk)
     alu = ALU(Out1, Out2, ExtOut, ALUSrcB, ALUOp, zero, Result)
     pc = PC(clk, Reset, PCWre, PCSrc, immediate, curPC)
     control = ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre,
-                          InsMemRW, DataMemRW, ExtSel, PCSrc, RegOut, ALUOp)
-    datamemory = DataMemory(Result, Out2, DataMemRW, DMOut)
-    ins = instructionMemory(curPC, InsMemRW, opCode, rs, rt, rd, immediate)
+                          InsMemRW, DataMemR, DataMemW, ExtSel, PCSrc, RegOut,
+                          ALUOp)
+    datamemory = DataMemory(clk, Result, Out2, DataMemR, DataMemW, DMOut)
+    insmem = instructionMemory(instructions, curPC, InsMemRW, opCode, rs, rt,
+                               rd, immediate, True)
     registerfile = registerFile(clk, RegWre, RegOut, rs, rt, rd, ALUM2Reg,
                                 Result, DMOut, Out1, Out2)
     ext = SignZeroExtend(immediate, ExtSel, ExtOut)
@@ -44,19 +65,25 @@ def singleCyleCpu():  #clk, Reset
     @instance
     def stimulus():
         Reset.next = 1
+        cycle = 1
         while True:
             yield delay(1)
-            print('-----------------------------------------------------------')
-            print('clk:' + str(clk), 'opcode:' + '{0:06b}'.format(int(opCode)),
+            print('-' * 90)
+            print('cycle:' + str(cycle), 'clk:' + str(clk),
+                  'opcode:' + '{0:06b}'.format(int(opCode)),
                   'Out1:' + str(Out1), 'Out2:' + str(Out2),
                   'curPc:' + str(curPC), 'Result:' + str(Result))
-            print('-----------------------------------------------------------\n')
+            print('-' * 90, '\n')
+            if not clk:
+                cycle += 1
+
     return instances()
 
 
 def main():
-    t = singleCyleCpu()
-    t.run_sim(4)
+    instructions, cnt = load_program('add')
+    t = singleCyleCpu(instructions)
+    t.run_sim(2 * cnt)
 
 
 if __name__ == '__main__':
