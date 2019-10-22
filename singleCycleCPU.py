@@ -12,23 +12,6 @@ import io
 import re
 
 
-def load_program(program):
-    '''
-    从program文件夹中读取指令
-    参数为文件名
-    '''
-    ins = []
-    cnt = 0
-    with io.open('./program/' + program + '.txt') as f:
-        for line in f:
-            match = re.match('([0,1]{6}  [0,1]{5}  [0,1]{5}  [0,1]{16}).*',
-                             line)
-            if match:
-                ins.append(match.group(1).replace(' ', ''))
-                cnt += 1
-    return ins, cnt
-
-
 @block
 def singleCyleCpu(instructions):  #clk, Reset
     opCode = Signal(intbv(0)[6:])
@@ -50,7 +33,7 @@ def singleCyleCpu(instructions):  #clk, Reset
     clk = Signal(intbv(1)[1:])
 
     clock = Clock(clk)
-    alu = ALU(Out1, Out2, ExtOut, ALUSrcB, ALUOp, zero, Result)
+    alu = ALU(Out1, Out2, ExtOut, ALUSrcB, ALUOp, zero, Result, True)
     pc = PC(clk, Reset, PCWre, PCSrc, immediate, curPC)
     control = ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre,
                           InsMemRW, DataMemR, DataMemW, ExtSel, PCSrc, RegOut,
@@ -59,7 +42,7 @@ def singleCyleCpu(instructions):  #clk, Reset
     insmem = instructionMemory(instructions, curPC, InsMemRW, opCode, rs, rt,
                                rd, immediate, True)
     registerfile = registerFile(clk, RegWre, RegOut, rs, rt, rd, ALUM2Reg,
-                                Result, DMOut, Out1, Out2)
+                                Result, DMOut, Out1, Out2, True)
     ext = SignZeroExtend(immediate, ExtSel, ExtOut)
 
     @instance
@@ -80,8 +63,29 @@ def singleCyleCpu(instructions):  #clk, Reset
     return instances()
 
 
+def load_program(program):
+    '''
+    从program文件夹中的文件中读取指令
+    以文件名作为参数，不加后缀
+    格式: 
+    6位op  5位rs  5位rt  16位(rd)immediate ...
+    '''
+    ins = []
+    cnt = 0
+    with io.open('./program/' + program + '.txt') as f:
+        for line in f:
+            match = re.match('([0,1]{6}  [0,1]{5}  [0,1]{5}  [0,1]{16}).*',
+                             line)
+            if match:
+                ins.append(match.group(1).replace(' ', ''))
+                cnt += 1
+    return ins, cnt
+
+
 def main():
-    instructions, cnt = load_program('add')
+    program = 'lessthan0'
+
+    instructions, cnt = load_program(program)
     t = singleCyleCpu(instructions)
     t.run_sim(2 * cnt)
 

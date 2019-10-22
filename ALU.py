@@ -34,7 +34,18 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
         elif ALUOp == intbv('110'):
             result.next = A ^ B
         elif ALUOp == intbv('111'):
-            result.next = A ^ ~B
+            # result.next = A ^ ~B
+            if A[31] ^ B[31]:
+                if A[31]:
+                    result.next = 1
+                else:
+                    result.next = 0
+            else:
+                if A < B:
+                    result.next = 1
+                else:
+                    result.next = 0
+                
 
         if DEBUG:
             print('<-Exit ALU\n')

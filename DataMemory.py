@@ -6,7 +6,7 @@ def DataMemory(clk, DAddr, DataIn, DataMemR, DataMemW, DataOut, DEBUG=False):
 
     memory = [Signal(intbv(0)[32:]) for i in range(64)]
     memory[0] = intbv(0x00000009)[32:]
-    memory[1] = intbv(0x00000008)[32:]
+    memory[1] = intbv(0xfffffff8)[32:]
     memory[2] = intbv(0x00000007)[32:]
     memory[3] = intbv(0x00000006)[32:]
 

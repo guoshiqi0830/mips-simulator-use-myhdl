@@ -40,11 +40,13 @@ def ControlUnit(opCode,
                                       intbv('100111')[6:]) else 1
 
         aluop = intbv(0)[3:]
-        aluop[2] = 1 if opCode == intbv('010001')[6:] else 0
-        aluop[1] = 1 if opCode in (intbv('010000')[6:],
-                                   intbv('010010')[6:]) else 0
+        aluop[2] = 1 if opCode in (intbv('010001')[6:],
+                                   intbv('101010')[6:]) else 0
+        aluop[1] = 1 if opCode in (intbv('010000')[6:], intbv('010010')[6:],
+                                   intbv('101010')[6:]) else 0
         aluop[0] = 1 if opCode in (intbv('000010')[6:], intbv('010000')[6:],
-                                   intbv('010010')[6:]) else 0
+                                   intbv('010010')[6:],
+                                   intbv('101010')[6:]) else 0
         ALUOp.next = aluop
 
         if DEBUG:
