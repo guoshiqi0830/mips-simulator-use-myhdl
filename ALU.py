@@ -4,6 +4,17 @@ from myhdl import *
 @block
 def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
         DEBUG=False):
+    '''
+    算术运算单元
+    @param Data1 操作数1 寄存器文件单元
+    @param Data2 操作数2 寄存器文件单元
+    @param intExt 操作数2 拓展单元
+    @param ALUSrcB 控制单元控制信号。0,第二操作数为ReadData2; 否则为intExt;
+    @param ALUOp 操作标志
+    @param zero 输出 控制信号。result=0，zerro=1；否则为0
+    @param result 结果=0,zero=1; 否则zero为0；
+    '''
+
     @always(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp)
     def logic():
         if DEBUG:
@@ -45,6 +56,10 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
                     result.next = 1
                 else:
                     result.next = 0
+<<<<<<< HEAD
+=======
+
+>>>>>>> d37c17b34e8e292cf1c657989b4044e26453bcaa
 
         if DEBUG:
             print('<-Exit ALU\n')
@@ -58,6 +73,27 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
 
     return logic, zero_detector
 
+@block
+def test1():
+    readData1 = Signal(intbv(0, min=-(2 ** 31), max=2 ** 31 - 1))
+    readData2 = Signal(intbv(0, min=-(2 ** 31), max=2 ** 31 - 1))
+    inExt = Signal(intbv(0, min=-(2 ** 31), max=2 ** 31 - 1))
+    aluSrcB = Signal(intbv(0, 0, 1));
+    aluOp = Signal(intbv(0)[3:]);
+    zero = Signal(0)
+    result = Signal(intbv(0, min=-(2 ** 31), max=2 ** 31 - 1))
+    debug = True
+
+    alu = ALU(readData1, readData2, inExt, aluSrcB, aluOp, zero, result, debug)
+    @instance
+    def stimulus():
+        readData1.next = int('111', 2)
+        for aluop in ('000', '001'):
+            aluOp.next = intbv(aluop)
+
+            yield delay(10)
+            print(aluop)
+    return instances()
 
 @block
 def test():
@@ -87,7 +123,7 @@ def test():
 
 
 def main():
-    t = test()
+    t = test1()
     t.run_sim()
 
 
