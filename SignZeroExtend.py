@@ -35,7 +35,7 @@ def test():
     def Stimulus():
         while True:
             yield delay(1)
-            print(immediate, ExtSel, out)
+            print('immediate:', immediate, 'ExtSel:', ExtSel, 'out:', out)
 
     return instances()
 

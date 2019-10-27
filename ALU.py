@@ -45,7 +45,6 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
                     result.next = 1
                 else:
                     result.next = 0
-                
 
         if DEBUG:
             print('<-Exit ALU\n')
@@ -63,23 +62,26 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
 @block
 def test():
     ALUOp = Signal(intbv(0)[3:])
-    A = Signal(intbv(0, min=-(2**31), max=2**31 - 1))
-    B = Signal(intbv(0, min=-(2**31), max=2**31 - 1))
+    ReadData1 = Signal(intbv(0, min=-(2**31), max=2**31 - 1))
+    ReadData2 = Signal(intbv(0, min=-(2**31), max=2**31 - 1))
     result = Signal(intbv(0, min=-(2**31), max=2**31 - 1))
     zero = Signal(0)
+    inExt = Signal(0)
+    ALUSrcB = Signal(0)
 
-    alu = ALU(ALUOp, A, B, result, zero)
+    alu = ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result)
 
     @instance
     def stimulus():
-        A.next = int('111', 2)
-        B.next = int('010', 2)
+        ReadData1.next = int('111', 2)
+        ReadData2.next = int('010', 2)
         for aluop in ('000', '001', '010', '011', '100', '101', '110', '111'):
             ALUOp.next = intbv(aluop)
 
             yield delay(10)
-            print(aluop)
-            print(A, B, result, zero)
+            print('aluop:', aluop)
+            print('A:', ReadData1, 'B:', ReadData2, 'result:', result, 'zero:',
+                  zero)
 
     return instances()
 

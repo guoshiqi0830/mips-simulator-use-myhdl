@@ -57,15 +57,15 @@ def ControlUnit(opCode,
 
 @block
 def test():
-    signal_1bit = [Signal(intbv(0)[1:]) for i in range(9)]
+    signal_1bit = [Signal(intbv(0)[1:]) for i in range(10)]
     PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW, \
-        DataMemRW, ExtSel, PCSrc, RegOut = signal_1bit
+        DataMemR, DataMemW, ExtSel, PCSrc, RegOut = signal_1bit
     ALUOp = Signal(intbv(0)[3:])
     opCode = Signal(intbv('0')[6:])
     zero = Signal(0)
 
     cu = ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW,
-                     DataMemRW, ExtSel, PCSrc, RegOut, ALUOp)
+                     DataMemR, DataMemW, ExtSel, PCSrc, RegOut, ALUOp)
 
     @instance
     def stimulus():
@@ -77,9 +77,9 @@ def test():
         ]:
             opCode.next = op_value
             yield delay(10)
-            print(format(op_value, '#b'))
-            print(PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW, DataMemRW,
-                  ExtSel, PCSrc, RegOut, format(int(ALUOp), '#b'))
+            print('op_value:', '{0:06b}'.format(op_value))
+            print(PCWre, ALUSrcB, ALUM2Reg, RegWre, InsMemRW, DataMemR,DataMemW,
+                  ExtSel, PCSrc, RegOut, 'aluop:', '{0:03b}'.format(int(ALUOp)))
 
     return instances()
 

@@ -42,7 +42,8 @@ def test():
         immediate.next = int('0100', 2)
         while True:
             yield delay(1)
-            print(clk, Reset, PCWre, PCSrc, immediate, int(Address))
+            print('clk:', clk, 'Reset:', Reset, 'PCWre:', PCWre, 'PCSrc:',
+                  PCSrc, 'immediate:', immediate, 'Address:', int(Address))
 
     return instances()
 

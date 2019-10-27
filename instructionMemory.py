@@ -50,16 +50,18 @@ def test():
     rs, rt, rd = signal_5bit
     immediate = Signal(intbv(0)[16:])
 
-    ins = instructionMemory(pc, InsMemRW, op, rs, rt, rd, immediate)
+    ins = instructionMemory(['10011100000000100000000000000011'], pc, InsMemRW,
+                            op, rs, rt, rd, immediate)
 
     @instance
     def stimulus():
         for i in range(1):
             pc.next = intbv(i * 4)
             yield delay(10)
-            print(pc.next, '{0:06b}'.format(int(op)),
-                  '{0:05b}'.format(int(rs)), '{0:05b}'.format(int(rt)),
-                  '{0:05b}'.format(int(rd)), '{0:016b}'.format(int(immediate)))
+            print('op:', '{0:06b}'.format(int(op)), 'rs:',
+                  '{0:05b}'.format(int(rs)), 'rt:', '{0:05b}'.format(int(rt)),
+                  'rd:', '{0:05b}'.format(int(rd)), 'immediate:',
+                  '{0:016b}'.format(int(immediate)))
 
     return instances()
 

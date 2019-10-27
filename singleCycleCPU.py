@@ -34,16 +34,16 @@ def singleCyleCpu(instructions):  #clk, Reset
 
     clock = Clock(clk)
     alu = ALU(Out1, Out2, ExtOut, ALUSrcB, ALUOp, zero, Result, True)
-    pc = PC(clk, Reset, PCWre, PCSrc, immediate, curPC)
+    pc = PC(clk, Reset, PCWre, PCSrc, immediate, curPC, True)
     control = ControlUnit(opCode, zero, PCWre, ALUSrcB, ALUM2Reg, RegWre,
                           InsMemRW, DataMemR, DataMemW, ExtSel, PCSrc, RegOut,
-                          ALUOp)
-    datamemory = DataMemory(clk, Result, Out2, DataMemR, DataMemW, DMOut)
+                          ALUOp, True)
+    datamemory = DataMemory(clk, Result, Out2, DataMemR, DataMemW, DMOut, True)
     insmem = instructionMemory(instructions, curPC, InsMemRW, opCode, rs, rt,
                                rd, immediate, True)
     registerfile = registerFile(clk, RegWre, RegOut, rs, rt, rd, ALUM2Reg,
                                 Result, DMOut, Out1, Out2, True)
-    ext = SignZeroExtend(immediate, ExtSel, ExtOut)
+    ext = SignZeroExtend(immediate, ExtSel, ExtOut, True)
 
     @instance
     def stimulus():
@@ -83,7 +83,7 @@ def load_program(program):
 
 
 def main():
-    program = 'lessthan0'
+    program = 'add'
 
     instructions, cnt = load_program(program)
     t = singleCyleCpu(instructions)
