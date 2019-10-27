@@ -60,7 +60,7 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
         if DEBUG:
             print('<-Exit ALU\n')
 
-    @always_comb
+    @always(result)
     def zero_detector():
         if result == 0:
             zero.next = 1
