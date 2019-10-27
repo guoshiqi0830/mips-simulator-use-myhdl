@@ -2,8 +2,7 @@ from myhdl import *
 
 
 @block
-def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
-        DEBUG=False):
+def ALU(ReadData1,ReadData2,inExt,ALUSrcB,ALUOp,zero,result,DEBUG=False):
     '''
     算术运算单元
     @param Data1 操作数1 寄存器文件单元
@@ -17,11 +16,11 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
 
     @always(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp)
     def logic():
-        if DEBUG:
-            print('->Enter ALU')
-            print('ReadData1:' + str(ReadData1), 'ReadData2:' + str(ReadData2),
-                  'inExt:' + str(inExt), 'ALUSrcB:' + str(ALUSrcB),
-                  'ALUOp:' + str(ALUOp))
+        # if DEBUG:
+        #     print('->Enter ALU')
+        #     print('ReadData1:' + str(ReadData1), 'ReadData2:' + str(ReadData2),
+        #           'inExt:' + str(inExt), 'ALUSrcB:' + str(ALUSrcB),
+        #           'ALUOp:' + str(ALUOp))
 
         A = ReadData1
         # 根据ALUSrcB选择数据来源，0则从寄存器取，1则从扩展单元取
@@ -29,7 +28,7 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
             B = ReadData2
         else:
             B = inExt
-
+        print('a = ', A, ';b = ', B)
         if ALUOp == intbv('000'):
             result.next = A + B
         elif ALUOp == intbv('001'):
@@ -57,8 +56,8 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
                 else:
                     result.next = 0
 
-        if DEBUG:
-            print('<-Exit ALU\n')
+        # if DEBUG:
+        #     print('<-Exit ALU\n')
 
     @always(result)
     def zero_detector():
@@ -83,12 +82,38 @@ def test1():
     alu = ALU(readData1, readData2, inExt, aluSrcB, aluOp, zero, result, debug)
     @instance
     def stimulus():
-        readData1.next = int('111', 2)
-        for aluop in ('000', '001'):
-            aluOp.next = intbv(aluop)
+        # 000 加法
+        readData1.next = intbv(0x003)[16:]
+        readData2.next = intbv(0x001)[16:]
+        aluOp.next = intbv('000')[16:]
+        yield delay(10)
+        print("加法a+b：resutl = ", result, "; zero = ", zero, "\n")
 
-            yield delay(10)
-            print(aluop)
+        # 001 减法
+        readData1.next = intbv(0x003)[16:]
+        readData2.next = intbv(0x001)[16:]
+        aluOp.next = intbv('001')[16:]
+        yield delay(10)
+        print("减法a-b：resutl = ", result, "; zero = ", zero, "\n")
+
+        # 010 减法 b-a
+        readData1.next = intbv(0x0aa)[16:]
+        readData2.next = intbv(0x0ff)[16:]
+        aluOp.next = intbv('010')[16:]
+        yield delay(10)
+        print("减法b-a：resutl = ", result, "; zero = ", zero, "\n")
+        # 011 a | b
+        readData1.next = intbv(0x003)[16:]
+        readData2.next = intbv(0x003)[16:]
+        aluOp.next = intbv('011')[16:]
+        yield delay(10)
+        print("减法b|a：resutl = ", result, "; zero = ", zero, "\n")
+        # 100 a | b
+        readData1.next = intbv(0x003)[16:]
+        readData2.next = intbv(0x005)[16:]
+        aluOp.next = intbv('100')[16:]
+        yield delay(10)
+        print("减法b&a：resutl = ", result, "; zero = ", zero, "\n")
     return instances()
 
 @block

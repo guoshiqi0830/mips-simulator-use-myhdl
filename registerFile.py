@@ -2,18 +2,24 @@ from myhdl import *
 
 
 @block
-def registerFile(clk,
-                 RegWre,
-                 RegOut,
-                 rs,
-                 rt,
-                 rd,
-                 ALUM2Reg,
-                 dataFromALU,
-                 dataFromRW,
-                 Data1,
-                 Data2,
-                 DEBUG=False):
+def registerFile(clk,RegWre,RegOut,rs,rt,rd,ALUM2Reg,dataFromALU,
+                 dataFromRW,Data1,Data2,DEBUG=False):
+    '''
+    寄存器文件单元
+    :param clk:时钟控制
+    :param RegWre: 0读取,非0时写入
+    :param RegOut: true，写入rd，否则rt
+    :param rs: 操作数1
+    :param rt: 操作数2
+    :param rd: 结果
+    :param ALUM2Reg:true，写数据为dataFromALU，否则为dataFromRW
+    :param dataFromALU:
+    :param dataFromRW:
+    :param Data1:数据1
+    :param Data2:数据2
+    :param DEBUG:
+    :return:
+    '''
     writeReg = Signal(intbv(0)[5:])
     writeData = Signal(intbv(0)[32:])
     register = [Signal(intbv(0)[32:]) for i in range(32)]
