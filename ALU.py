@@ -56,10 +56,6 @@ def ALU(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp, zero, result,
                     result.next = 1
                 else:
                     result.next = 0
-<<<<<<< HEAD
-=======
-
->>>>>>> d37c17b34e8e292cf1c657989b4044e26453bcaa
 
         if DEBUG:
             print('<-Exit ALU\n')
