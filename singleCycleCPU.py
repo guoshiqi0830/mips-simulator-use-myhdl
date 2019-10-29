@@ -83,7 +83,7 @@ def load_program(program):
 
 
 def main():
-    program = 'add'
+    program = 'lessthan0'
 
     instructions, cnt = load_program(program)
     t = singleCyleCpu(instructions)

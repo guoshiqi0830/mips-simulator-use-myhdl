@@ -87,33 +87,33 @@ def test1():
         readData2.next = intbv(0x001)[16:]
         aluOp.next = intbv('000')[16:]
         yield delay(10)
-        print("加法a+b：resutl = ", result, "; zero = ", zero, "\n")
+        print("加法a+b：result = ", result, "; zero = ", zero, "\n")
 
         # 001 减法
         readData1.next = intbv(0x003)[16:]
         readData2.next = intbv(0x001)[16:]
         aluOp.next = intbv('001')[16:]
         yield delay(10)
-        print("减法a-b：resutl = ", result, "; zero = ", zero, "\n")
+        print("减法a-b：result = ", result, "; zero = ", zero, "\n")
 
         # 010 减法 b-a
         readData1.next = intbv(0x0aa)[16:]
         readData2.next = intbv(0x0ff)[16:]
         aluOp.next = intbv('010')[16:]
         yield delay(10)
-        print("减法b-a：resutl = ", result, "; zero = ", zero, "\n")
+        print("减法b-a：result = ", result, "; zero = ", zero, "\n")
         # 011 a | b
         readData1.next = intbv(0x003)[16:]
         readData2.next = intbv(0x003)[16:]
         aluOp.next = intbv('011')[16:]
         yield delay(10)
-        print("减法b|a：resutl = ", result, "; zero = ", zero, "\n")
+        print("减法b|a：result = ", result, "; zero = ", zero, "\n")
         # 100 a | b
         readData1.next = intbv(0x003)[16:]
         readData2.next = intbv(0x005)[16:]
         aluOp.next = intbv('100')[16:]
         yield delay(10)
-        print("减法b&a：resutl = ", result, "; zero = ", zero, "\n")
+        print("减法b&a：result = ", result, "; zero = ", zero, "\n")
     return instances()
 
 @block
