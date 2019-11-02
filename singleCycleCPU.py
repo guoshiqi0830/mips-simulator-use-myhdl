@@ -14,6 +14,10 @@ import re
 
 @block
 def singleCyleCpu(instructions):  #clk, Reset
+    '''
+    顶层模块
+    @param instructions: 指令数组
+    '''
     opCode = Signal(intbv(0)[6:])
     signal_32bit = [Signal(intbv(0)[32:]) for i in range(4)]
     Out1, Out2, curPC, Result = signal_32bit
@@ -83,6 +87,7 @@ def load_program(program):
 
 
 def main():
+    #写好的程序: add and lessthan lessthan0
     program = 'lessthan0'
 
     instructions, cnt = load_program(program)

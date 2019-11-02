@@ -11,6 +11,17 @@ def instructionMemory(instructions,
                       rd,
                       immediate,
                       DEBUG=False):
+    '''
+    指令存储单元
+    @param instructions: 指令数组
+    @param pc: 指令地址
+    @param InsMemRW: 控制是否读取指令的信号
+    @param op: 操作代码
+    @param rs: rs寄存器
+    @param rt: rt寄存器
+    @param rd: rd寄存器
+    @param immeidate: 立即数
+    '''
     mem = [Signal(intbv(0)[32:]) for i in range(16)]
     for i in range(len(instructions)):
         mem[i] = intbv(instructions[i])[32:]

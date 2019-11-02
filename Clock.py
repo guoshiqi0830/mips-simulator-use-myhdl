@@ -2,7 +2,10 @@ from myhdl import *
 
 @block
 def Clock(clk, period=1):
-
+    '''
+    时钟驱动
+    @param clk: 时钟信号
+    '''
     halfPeriod = delay(period)
 
     @always(halfPeriod)

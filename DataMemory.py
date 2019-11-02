@@ -3,7 +3,15 @@ from myhdl import *
 
 @block
 def DataMemory(clk, DAddr, DataIn, DataMemR, DataMemW, DataOut, DEBUG=False):
-
+    '''
+    数据存储单元
+    @param clk: 时钟信号
+    @param DAddr: 内存地址
+    @param DataIn: 写入的数据
+    @param DataMemR: 控制是否读取的信号
+    @param DataMemW: 控制是否写入的信号
+    @param DataOut: 读取到的数据
+    '''
     memory = [Signal(intbv(0)[32:]) for i in range(64)]
     memory[0] = intbv(0x00000009)[32:]
     memory[1] = intbv(0xfffffff8)[32:]

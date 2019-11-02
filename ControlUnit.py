@@ -16,6 +16,21 @@ def ControlUnit(opCode,
                 RegOut,
                 ALUOp,
                 DEBUG=False):
+    '''
+    控制单元
+    @param opCode: 操作代码
+    @param zero: ALU的输出结果为0则为1，否则为0
+    @param PCWre: 控制是否转到下一条指令，halt指令执行时为0，其余为1
+    @param ALUSrcB: 为1时ALU从寄存器获取数据，否则从扩展单元获取
+    @param RegWre: 控制register file是否写数据
+    @param InsMemRW: 控制instruction memory是否读取指令
+    @param DataMemR: 控制data memory是否读取数据
+    @param DataMemW: 控制data memory是否写数据
+    @param ExtSel: 控制扩展单元是否扩展立即数
+    @param PCSrc: 控制PC是否加上立即数，分支指令时为1，其余为0
+    @param RegOut: 控制寄存器是将结果写入rt还是rd
+    @param ALUOp: ALU的操作类型
+    '''
     @always(opCode, zero)
     def logic():
         if DEBUG:
@@ -32,6 +47,7 @@ def ControlUnit(opCode,
                                       intbv('111111')[6:]) else 1
         InsMemRW.next = 0
         #? DataMemRW.next = 0 if opCode == intbv('100111')[6:] else 1
+        # 和ppt中的不同，改为了两个信号分别控制读和写
         DataMemR.next = 1 if opCode == intbv('100111')[6:] else 0
         DataMemW.next = 1 if opCode == intbv('100110')[6:] else 0
         ExtSel.next = 0 if opCode == intbv('010000')[6:] else 1

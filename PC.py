@@ -4,6 +4,15 @@ from Clock import Clock
 
 @block
 def PC(clk, Reset, PCWre, PCSrc, immediate, Address, DEBUG=False):
+    '''
+    PC单元
+    @param clk: 时钟信号
+    @param Reset: 重置信号
+    @param PCWre: halt指令执行时为0，其余为1
+    @param PCSrc: 是否加上立即数
+    @param immediate: 立即数
+    @param Address: 指令地址
+    '''
     @always(clk.posedge, Reset.negedge)
     def logic():
         if DEBUG:

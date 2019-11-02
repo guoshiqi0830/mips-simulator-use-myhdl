@@ -3,6 +3,12 @@ from myhdl import *
 
 @block
 def SignZeroExtend(immediate, ExtSel, out, DEBUG=False):
+    '''
+    扩展单元
+    @param immeidate: 立即数
+    @param ExtSel: 是否扩展
+    @param out：输出
+    '''
     @always(immediate, ExtSel)
     def logic():
         if DEBUG:

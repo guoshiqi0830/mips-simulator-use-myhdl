@@ -16,11 +16,11 @@ def ALU(ReadData1,ReadData2,inExt,ALUSrcB,ALUOp,zero,result,DEBUG=False):
 
     @always(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp)
     def logic():
-        # if DEBUG:
-        #     print('->Enter ALU')
-        #     print('ReadData1:' + str(ReadData1), 'ReadData2:' + str(ReadData2),
-        #           'inExt:' + str(inExt), 'ALUSrcB:' + str(ALUSrcB),
-        #           'ALUOp:' + str(ALUOp))
+        if DEBUG:
+            print('->Enter ALU')
+            print('ReadData1:' + str(ReadData1), 'ReadData2:' + str(ReadData2),
+                  'inExt:' + str(inExt), 'ALUSrcB:' + str(ALUSrcB),
+                  'ALUOp:' + str(ALUOp))
 
         A = ReadData1
         # 根据ALUSrcB选择数据来源，0则从寄存器取，1则从扩展单元取
@@ -45,6 +45,7 @@ def ALU(ReadData1,ReadData2,inExt,ALUSrcB,ALUOp,zero,result,DEBUG=False):
             result.next = A ^ B
         elif ALUOp == intbv('111'):
             # result.next = A ^ ~B
+            # 这里改为了判断小于
             if A[31] ^ B[31]:
                 if A[31]:
                     result.next = 1
@@ -56,8 +57,8 @@ def ALU(ReadData1,ReadData2,inExt,ALUSrcB,ALUOp,zero,result,DEBUG=False):
                 else:
                     result.next = 0
 
-        # if DEBUG:
-        #     print('<-Exit ALU\n')
+        if DEBUG:
+            print('<-Exit ALU\n')
 
     @always(result)
     def zero_detector():
