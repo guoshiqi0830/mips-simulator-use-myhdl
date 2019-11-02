@@ -10,8 +10,8 @@ def ALU(ReadData1,ReadData2,inExt,ALUSrcB,ALUOp,zero,result,DEBUG=False):
     @param intExt 操作数2 拓展单元
     @param ALUSrcB 控制单元控制信号。0,第二操作数为ReadData2; 否则为intExt;
     @param ALUOp 操作标志
-    @param zero 输出 控制信号。result=0，zerro=1；否则为0
-    @param result 结果=0,zero=1; 否则zero为0；
+    @param zero 输出 控制信号。result=0，zero=1；否则为0
+    @param result 输出结果。
     '''
 
     @always(ReadData1, ReadData2, inExt, ALUSrcB, ALUOp)

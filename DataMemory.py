@@ -10,7 +10,7 @@ def DataMemory(clk, DAddr, DataIn, DataMemR, DataMemW, DataOut, DEBUG=False):
     @param DataIn: 写入的数据
     @param DataMemR: 控制是否读取的信号
     @param DataMemW: 控制是否写入的信号
-    @param DataOut: 读取到的数据
+    @param DataOut: 输出读取到的数据
     '''
     memory = [Signal(intbv(0)[32:]) for i in range(64)]
     memory[0] = intbv(0x00000009)[32:]

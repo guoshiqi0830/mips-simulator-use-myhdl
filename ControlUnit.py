@@ -18,8 +18,8 @@ def ControlUnit(opCode,
                 DEBUG=False):
     '''
     控制单元
-    @param opCode: 操作代码
-    @param zero: ALU的输出结果为0则为1，否则为0
+    @param opCode: 输入信号，操作代码
+    @param zero: 输入信号，ALU的操作结果是否为0
     @param PCWre: 控制是否转到下一条指令，halt指令执行时为0，其余为1
     @param ALUSrcB: 为1时ALU从寄存器获取数据，否则从扩展单元获取
     @param RegWre: 控制register file是否写数据
